@@ -1,5 +1,14 @@
 "use strict";
-let revenue = 1000;
-let bonus = 500;
-let result = revenue + bonus;
-console.log(result);
+function getFullName(userEntity) {
+    return `${userEntity.firstname} ${userEntity.surname}`;
+}
+let getFullNameArrow = (firstname, surname) => {
+    return `${firstname} ${surname}`;
+};
+let user = {
+    firstname: "Александр",
+    surname: "Сёмушкин",
+    city: "Нск",
+    age: 33
+};
+console.log(getFullName(user));
