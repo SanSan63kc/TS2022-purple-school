@@ -1,20 +1,12 @@
-function getFullName(userEntity:{firstname: string, surname: string}): string{
-    return `${userEntity.firstname} ${userEntity.surname}`
+let skills: string[] = ["Dev", "DevOps", "Testing"]
+
+for (let skill of skills){
+    console.log(skill.toLowerCase())
 }
 
-let getFullNameArrow = (firstname: string, surname: string): string => {
-    return `${firstname} ${surname}`
-}
+let result = skills
+.filter(s=>s!=="DevOps")
+.map(s=>s+"!")
+.reduce((a,b)=>a+b)
 
-let user = {
-    firstname: "Александр", 
-    surname: "Сёмушкин", 
-    city: "Нск",
-    age: 33, 
-    skills: {
-        dev: true,
-        devops: false
-    }
-}
-
-console.log(getFullName(user))
+console.log(result)
