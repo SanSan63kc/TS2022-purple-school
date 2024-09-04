@@ -1,33 +1,23 @@
-enum StatusCode {
-    SUCCESS = 1,
-    IN_PROCESS = 3,
-    FAILED = 10
+enum QuestionStatus {
+    Published = "published",
+    Draft = "draft",
+    Deleted = "deleted"
 }
 
-let res = {
-    message: "Платёж успешен",
-    statusCode: StatusCode.SUCCESS
+async function getFaqs(req: {
+    topicId: number,
+    status: QuestionStatus
+}): Promise<{
+    questoin: string,
+    answer: string,
+    tags: string[],
+    likes: number,
+    status: QuestionStatus
+}[]> {
+    const res = await fetch('/faqs', {
+        method: 'POST',
+        body: JSON.stringify(req)
+    });
+    const data = await res.json();
+    return data;
 }
-
-if (res.statusCode = StatusCode.SUCCESS) {
-
-}
-
-function action(status: StatusCode) {
-
-}
-
-action(StatusCode.SUCCESS)
-action(1)
-action(3)
-
-let compute = () => {
-    return 3
-}
-
-const enum Roles {
-    ADMIN = 1,
-    USER = 2
-}
-
-let res2 = Roles.ADMIN
