@@ -1,12 +1,5 @@
-let skills: string[] = ["Dev", "DevOps", "Testing"]
+let skills: [string, number] = ["Dev", 1] 
+let id  = skills[1]
+let skillName = skills[0]
 
-for (let skill of skills){
-    console.log(skill.toLowerCase())
-}
-
-let result = skills
-.filter(s=>s!=="DevOps")
-.map(s=>s+"!")
-.reduce((a,b)=>a+b)
-
-console.log(result)
+let arr: [number, string, ...boolean[]] = [1, "dsa", true, false, false]
