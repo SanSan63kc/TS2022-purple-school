@@ -1,33 +1,30 @@
-interface IPayment {
-    sum: number,
-    number: number,
-    to: number
+function logId(id: string | number): void {
+    console.log(id)
 }
 
-enum PaymentStatus {
-    Success = "success",
-    Failed = "failed"
+let a = logId(1)
+
+function multiply(f: number, s?: string): number | void {
+    if (!s) {
+        return f * f
+    }
+    /* return f * s */
 }
 
-interface IPaymentsRequest extends IPayment {
+type voidFunction=()=>void
 
+
+let f1: voidFunction = ()=>{}
+let f2: voidFunction = ()=>{
+    return true
 }
 
-interface IDataSuccess extends IPayment{
-    databaseId: number,
+let b = f2()
+
+let skills = ["Dev", "DevOps"]
+
+let user = {
+    s:["s"]
 }
 
-interface IDataFailed {
-    errorMessage: string,
-    errorCode: number
-}
-
-interface IResponseSuccess {
-    status: PaymentStatus.Success,
-    data: IDataSuccess 
-} 
-
-interface IResponseFailed {
-    status: PaymentStatus.Failed,
-    data: IDataFailed 
-} 
+skills.forEach((skill)=>user.s.push(skill))
