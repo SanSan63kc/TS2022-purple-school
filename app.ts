@@ -1,31 +1,33 @@
-interface User {
-    login: string,
-    password?: string
+interface IPayment {
+    sum: number,
+    number: number,
+    to: number
 }
 
-let user: User = {
-    login: "a@a.ru",
-    password: "1"
+enum PaymentStatus {
+    Success = "success",
+    Failed = "failed"
 }
 
-function multiply(first: number, second?: number): number {
-    if (!second) {
-        return first * first
-    }
-    return first * second
+interface IPaymentsRequest extends IPayment {
+
 }
 
-interface UserPro {
-    login: string,
-    password?: {
-        type: "primary" | "secondary"
-    }
+interface IDataSuccess extends IPayment{
+    databaseId: number,
 }
 
-function testPass(user: UserPro){
-    let t = user.password?.type
+interface IDataFailed {
+    errorMessage: string,
+    errorCode: number
 }
 
-function test(param? : string){
-    let t = param ?? multiply(5)
-}
+interface IResponseSuccess {
+    status: PaymentStatus.Success,
+    data: IDataSuccess 
+} 
+
+interface IResponseFailed {
+    status: PaymentStatus.Failed,
+    data: IDataFailed 
+} 
