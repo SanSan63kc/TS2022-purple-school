@@ -1,39 +1,14 @@
-function logId(id: string | number | boolean) {
-    if (typeof id === "string") {
-        console.log(id.toLowerCase())
-    } else if (typeof id === "number") {
-        console.log(id)
-    } else {
-        console.log(id)
-    }
+enum RequestType {
+    GET = "get",
+    POST= "post"
 }
 
-logId(1)
-logId("fdsf")
-logId(true)
+function fetchWithAuth(url: string, method: "post" | "get"){}
 
-function logError(err: string | string[]) {
-    if (Array.isArray(err)) {
-        console.log(err)
-    } else {
-        console.log(err)
-    }
-}
+let a = "asasd"
 
-function logObject(obj: { a: number } | { b: number }) {
-    if ("a" in obj) {
-        console.log(obj.a)
-    } else {
-        console.log(obj.b)
-    }
-}
+fetchWithAuth("s", "post")
 
-function logMultipleIds(a: string | number, b: string | boolean) {
-    if (a === b){
+let method = "post"
 
-    } else {
-        console.log(a)
-    }
-}
-
-let a: 1 = 1
+fetchWithAuth("s", method as "post")
