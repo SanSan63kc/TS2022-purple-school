@@ -1,38 +1,42 @@
-let input: unknown
+function generateError(message: string): never {
+    throw new Error(message)
+}
 
-input = 3
-input = ["sf", 1]
+function dumpError(): never {
+    while (true) { }
+}
 
-let res = input
 
-function run(i: unknown) {
-    if (typeof i === "number") {
-        i++
-    } else {
-        i
+function rec(): never {
+    return rec()
+}
+
+let a: void = undefined
+
+type paymentAction = "refund" | "checkout" | "reject"
+
+function processAction(action: paymentAction) {
+    switch (action) {
+        case "refund":
+            //...
+            break
+        case "checkout":
+            //...
+            break
+        case "reject":
+            //...
+            break
+        default:
+            let _: never = action
+            throw new Error("Нет такого action")
     }
 }
 
-run(input)
-
-async function getData() {
-    try {
-        await fetch("")
-    } catch (error) {
-        if (error instanceof Error)
-            console.log(error.message)
+function isString(x: string | number): boolean{
+    if (typeof x === "string"){
+        return true
+    } else if (typeof x === "number"){
+        return false
     }
+    generateError("sdsdsds")
 }
-
-async function getDataForce() {
-    try {
-        await fetch("")
-    } catch (error) {
-        let e = error as Error
-        console.log(e.message)
-    }
-}
-
-type U1 = unknown | null
-
-type I1 = unknown & string
