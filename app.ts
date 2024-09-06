@@ -1,30 +1,38 @@
-function logId(id: string | number): void {
-    console.log(id)
-}
+let input: unknown
 
-let a = logId(1)
+input = 3
+input = ["sf", 1]
 
-function multiply(f: number, s?: string): number | void {
-    if (!s) {
-        return f * f
+let res = input
+
+function run(i: unknown) {
+    if (typeof i === "number") {
+        i++
+    } else {
+        i
     }
-    /* return f * s */
 }
 
-type voidFunction=()=>void
+run(input)
 
-
-let f1: voidFunction = ()=>{}
-let f2: voidFunction = ()=>{
-    return true
+async function getData() {
+    try {
+        await fetch("")
+    } catch (error) {
+        if (error instanceof Error)
+            console.log(error.message)
+    }
 }
 
-let b = f2()
-
-let skills = ["Dev", "DevOps"]
-
-let user = {
-    s:["s"]
+async function getDataForce() {
+    try {
+        await fetch("")
+    } catch (error) {
+        let e = error as Error
+        console.log(e.message)
+    }
 }
 
-skills.forEach((skill)=>user.s.push(skill))
+type U1 = unknown | null
+
+type I1 = unknown & string
