@@ -1,42 +1,22 @@
-function generateError(message: string): never {
-    throw new Error(message)
+let n: null = null
+let n1: any = undefined
+/* let n2: number = null
+let n2: string = null
+let n2: undefined = null */
+
+interface User {
+    name: string
 }
 
-function dumpError(): never {
-    while (true) { }
-}
-
-
-function rec(): never {
-    return rec()
-}
-
-let a: void = undefined
-
-type paymentAction = "refund" | "checkout" | "reject"
-
-function processAction(action: paymentAction) {
-    switch (action) {
-        case "refund":
-            //...
-            break
-        case "checkout":
-            //...
-            break
-        case "reject":
-            //...
-            break
-        default:
-            let _: never = action
-            throw new Error("Нет такого action")
+function getUser()/* : User */ {
+    if (Math.random() > 0.5) {
+        return
+    } else {
+        return {
+            name: "saa"
+        } as User
     }
 }
 
-function isString(x: string | number): boolean{
-    if (typeof x === "string"){
-        return true
-    } else if (typeof x === "number"){
-        return false
-    }
-    generateError("sdsdsds")
-}
+let user = getUser()
+/* let n5 = user.name */
