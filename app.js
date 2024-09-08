@@ -1,10 +1,10 @@
 "use strict";
-let skills = ["Dev", "DevOps", "Testing"];
-for (let skill of skills) {
-    console.log(skill.toLowerCase());
+class User {
+    constructor(name) {
+        this.name = name;
+    }
 }
-let result = skills
-    .filter(s => s !== "DevOps")
-    .map(s => s + "!")
-    .reduce((a, b) => a + b);
-console.log(result);
+let user = new User("saa");
+console.log(user);
+user.name = "Alex";
+console.log(user);
