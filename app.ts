@@ -1,25 +1,33 @@
-class User {
-    _login: string
-    password: string
-    createdAt: Date
-
-    set login(l: string | number) {
-        this._login = "user_" + l
-        this.createdAt = new Date()
-    }
-
-    get login() {
-        return this._login
-    }
-
-    async getPassword(p: string){
-
-    }
-
-    /* setPassword(p: string){
-        sync
-    } */
+interface ILogger{
+    log(...args: any[]): void
+    error(...args: any[]): void
 }
 
-let user = new User()
-user.login = "myLogin"
+class Logger implements ILogger{
+    log(...args: any[]): void {
+        console.log(...args)
+    }
+    async error(...args: any[]): Promise<void> {
+        // кинуть во внешнюю систему
+        console.log(...args)
+    }
+}
+
+interface IPayable{
+    pay(paymentID: number): void
+    price?: number
+}
+
+interface IDEletable{
+    delete(): void
+}
+
+class User implements IPayable, IDEletable{
+    delete(): void {
+        throw new Error("Method not implemented.")
+    }
+    pay(paymentID: number | string): void {
+        //
+    }
+    price?: number | undefined
+}
