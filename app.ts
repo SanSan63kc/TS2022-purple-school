@@ -1,23 +1,25 @@
 class User {
-    skills: string[];
+    _login: string
+    password: string
+    createdAt: Date
 
-    addSkill(skill: string): void
-    addSkill(skills: string[]): void
-    addSkill(skillOrSkills: string | string[]): void {
-        if (typeof skillOrSkills === "string") {
-            this.skills.push(skillOrSkills)
-        } else {
-            this.skills.concat(skillOrSkills)
-        }
+    set login(l: string | number) {
+        this._login = "user_" + l
+        this.createdAt = new Date()
     }
+
+    get login() {
+        return this._login
+    }
+
+    async getPassword(p: string){
+
+    }
+
+    /* setPassword(p: string){
+        sync
+    } */
 }
 
-function run(distance: string): string
-function run(distance: number): number
-function run(distance: number | string): number | string {
-    if (typeof distance ==="number"){
-        return 3
-    } else return ""
-}
-
-run()
+let user = new User()
+user.login = "myLogin"
