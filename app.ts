@@ -1,48 +1,33 @@
-class User {
-    name: string
+class Vehicle {
+    public make: string
+    private damages: string[]
+    private _model: string
+    protected run: number
+    #price: number
 
-    constructor(name: string) {
-        this.name = name
+    addDamate(damage: string){
+        this.damages.push(damage)
+    }
+
+    set model(m: string){
+        this._model = m
+        //this.#price = 100
+    }
+
+    get model(){
+        return this._model
+    }
+
+    isPriceEqual(v: Vehicle){
+        return this.#price === v.#price
     }
 }
 
-class Users extends Array<User> {
-    searchByName(name: string) {
-        return this.filter(u => u.name === name)
-    }
-
-    override toString(): string{
-        return this.map(u=>u.name).join(", ")
+class EuroTruck extends Vehicle{
+    setRun(km: number){
+        this.run = km/0.62
+        
     }
 }
 
-let users = new Users()
-users.push(new User("saa"))
-users.push(new User("alex"))
-console.log(users.toString())
-
-class UsersList{
-    users: User[]
-
-    push(u: User){
-        this.users.push(u)
-    }
-}
-
-class Payment{
-    date: Date
-}
-
-class UserWithPayment extends Payment{
-    name: string
-}
-
-class UserWithPayment2 {
-    user: User
-    payment: Payment
-
-    constructor(user: User, payment: Payment){
-        this.payment = payment
-        this.user = user
-    }
-}
+new Vehicle().make = "d"
