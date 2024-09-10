@@ -1,32 +1,27 @@
 "use strict";
-var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-};
-var _Vehicle_price;
-class Vehicle {
+class Payment {
     constructor() {
-        _Vehicle_price.set(this, void 0);
+        this.date = new Date();
+        this.getDateArrow = () => {
+            return this.date;
+        };
     }
-    addDamate(damage) {
-        this.damages.push(damage);
-    }
-    set model(m) {
-        this._model = m;
-        //this.#price = 100
-    }
-    get model() {
-        return this._model;
-    }
-    isPriceEqual(v) {
-        return __classPrivateFieldGet(this, _Vehicle_price, "f") === __classPrivateFieldGet(v, _Vehicle_price, "f");
+    getDate() {
+        return this.date;
     }
 }
-_Vehicle_price = new WeakMap();
-class EuroTruck extends Vehicle {
-    setRun(km) {
-        this.run = km / 0.62;
+let pay = new Payment();
+let user = {
+    id: 1,
+    paymentDate: pay.getDate.bind(pay),
+    paymentDateArrow: pay.getDateArrow
+};
+/* console.log(pay.getDate())
+console.log(user.paymentDate())
+console.log(user.paymentDateArrow()) */
+class PaymentPersistant extends Payment {
+    save() {
+        return super.getDate();
     }
 }
-new Vehicle().make = "d";
+console.log(new PaymentPersistant().save());

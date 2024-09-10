@@ -56,6 +56,6 @@ cart.addProduct(new Product(1, "Батончики", 10));
 cart.addProduct(new Product(2, "Витаминки", 20));
 cart.addProduct(new Product(3, "Минералка", 15));
 cart.deleteProduct(1);
-//cart.setDelivery(new HomeDelivery(new Date(), "myAddress"))
+cart.setDelivery(new HomeDelivery(new Date(), "myAddress"));
 console.log(cart.getSum());
 console.log(cart.checkOut());

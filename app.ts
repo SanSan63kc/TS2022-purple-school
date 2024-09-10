@@ -1,20 +1,31 @@
-class UserService{
-    private static db: any;
+class Payment {
+    private date: Date = new Date()
 
-    static getUser(id: number){
-        return UserService.db.findById(id)
+    getDate(this: Payment) {
+        return this.date
     }
 
-    create(){
-        UserService.db
-    }
-
-    static{
-       UserService.db = "sdf" 
+    getDateArrow = () => {
+        return this.date
     }
 }
 
-UserService.getUser(1)
+let pay = new Payment()
 
-let inst = new UserService()
-inst.create()
+let user = {
+    id: 1,
+    paymentDate: pay.getDate.bind(pay),
+    paymentDateArrow: pay.getDateArrow
+}
+
+/* console.log(pay.getDate())
+console.log(user.paymentDate())
+console.log(user.paymentDateArrow()) */
+
+class PaymentPersistant extends Payment {
+    save(){
+        return this.getDateArrow()
+    }
+}
+
+console.log(new PaymentPersistant().save())
