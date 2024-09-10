@@ -1,27 +1,16 @@
 "use strict";
-class Payment {
-    constructor() {
-        this.date = new Date();
-        this.getDateArrow = () => {
-            return this.date;
-        };
-    }
-    getDate() {
-        return this.date;
+class Controller {
+    handleWithLogs(req) {
+        console.log("Start");
+        this.handle(req);
+        console.log("End");
     }
 }
-let pay = new Payment();
-let user = {
-    id: 1,
-    paymentDate: pay.getDate.bind(pay),
-    paymentDateArrow: pay.getDateArrow
-};
-/* console.log(pay.getDate())
-console.log(user.paymentDate())
-console.log(user.paymentDateArrow()) */
-class PaymentPersistant extends Payment {
-    save() {
-        return super.getDate();
+//new Controller() - нельзя
+class UserController extends Controller {
+    handle(req) {
+        console.log(req);
     }
 }
-console.log(new PaymentPersistant().save());
+let c = new UserController();
+c.handleWithLogs("Request");
