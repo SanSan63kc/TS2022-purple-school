@@ -1,31 +1,27 @@
-class Payment {
-    private date: Date = new Date()
+class UserBuilder {
+    name: string
 
-    getDate(this: Payment) {
-        return this.date
+    setName(name: string): this {
+        this.name = name
+        return this
     }
 
-    getDateArrow = () => {
-        return this.date
-    }
-}
-
-let pay = new Payment()
-
-let user = {
-    id: 1,
-    paymentDate: pay.getDate.bind(pay),
-    paymentDateArrow: pay.getDateArrow
-}
-
-/* console.log(pay.getDate())
-console.log(user.paymentDate())
-console.log(user.paymentDateArrow()) */
-
-class PaymentPersistant extends Payment {
-    save(){
-        return this.getDateArrow()
+    isAdmin(): this is AdminBuilder {
+        return this instanceof AdminBuilder
     }
 }
 
-console.log(new PaymentPersistant().save())
+class AdminBuilder extends UserBuilder {
+    roles: string[]
+}
+
+let res = new UserBuilder().setName("saa")
+let res2 = new AdminBuilder().setName("saa")
+
+let user: UserBuilder | AdminBuilder = new UserBuilder()
+
+if (user.isAdmin()){
+    console.log(user)
+} else {
+    console.log(user)
+}
