@@ -1,20 +1,13 @@
-abstract class Controller{
-    abstract handle(req: any): void
-
-    handleWithLogs(req: any){
-        console.log("Start")
-        this.handle(req)
-        console.log("End")
-    }
+function logMiddleware<T>(data: T): T {
+    console.log(data)
+    return data
 }
 
-//new Controller() - нельзя
+let res = logMiddleware("10")
 
-class UserController extends Controller{
-    handle(req: any): void {
-        console.log(req)
-    }
+function getSplittedHalf<T>(data: Array<T>): Array<T> {
+    let l = data.length / 2
+    return data.splice(0, l)
 }
 
-let c = new UserController()
-c.handleWithLogs("Request")
+getSplittedHalf<number>([1, 2, 3])
