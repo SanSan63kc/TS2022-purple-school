@@ -16,3 +16,5 @@ function sortedArray(inputData, type) {
 }
 console.log(sortedArray(data, "asc"));
 console.log(sortedArray(data, "desc"));
+
+//
