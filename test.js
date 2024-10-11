@@ -1,20 +1,22 @@
 "use strict";
 let data = [
-    { id: 1, name: "Вася" },
-    { id: 2, name: "Петя" },
-    { id: 3, name: "Надя" },
+    { group: 1, name: "a" },
+    { group: 1, name: "b" },
+    { group: 2, name: "c" },
 ];
-function sortedArray(inputData, type) {
-    return inputData.sort((a, b) => {
-        switch (type) {
-            case "asc":
-                return a.id - b.id;
-            case "desc":
-                return b.id - a.id;
+function group(array, key) {
+    return array.reduce((map, item) => {
+        let itemKey = item[key];
+        let currentEl = map[itemKey];
+        if (Array.isArray(currentEl)) {
+            currentEl.push(item);
         }
-    });
+        else {
+            currentEl = [item];
+        }
+        map[itemKey] = currentEl;
+        return map;
+    }, {});
 }
-console.log(sortedArray(data, "asc"));
-console.log(sortedArray(data, "desc"));
-
-//
+let res = group(data, "group");
+console.log(res);

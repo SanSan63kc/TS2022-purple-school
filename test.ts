@@ -1,23 +1,33 @@
-let data = [
-    { id: 1, name: "Вася" },
-    { id: 2, name: "Петя" },
-    { id: 3, name: "Надя" },
+interface Data {
+    group: number;
+    name: string;
+}
+
+let data: Data[] = [
+    {group: 1, name: "a"},
+    {group: 1, name: "b"},
+    {group: 2, name: "c"},
 ]
 
-interface ID {
-    id: number
+interface IGroup<T> {
+    [key: string]: T[]
 }
 
-function sortedArray<T extends ID>(inputData: T[], type: "asc" | "desc"): T[] {
-    return inputData.sort((a, b) => {
-        switch (type) {
-            case "asc":
-                return a.id - b.id
-            case "desc":
-                return b.id - a.id
+type key = string | number | symbol
+
+function group<T extends Record<string, any>>(array: T[], key: keyof T): IGroup<T>{
+    return array.reduce<IGroup<T>>((map: IGroup<T>, item)=>{
+        let itemKey = item[key];
+        let currentEl = map[itemKey]
+        if (Array.isArray(currentEl)){
+            currentEl.push(item)
+        } else {
+            currentEl = [item]
         }
-    })
+        map[itemKey] = currentEl
+        return map
+    }, {})
 }
 
-console.log(sortedArray(data,"asc"))
-console.log(sortedArray(data,"desc"))
+let res = group<Data>(data, "group")
+console.log(res)
