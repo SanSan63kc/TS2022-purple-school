@@ -1,19 +1,28 @@
-interface IUser {
-    name: string;
-    age: number;
+let strOrNum: string | number
+
+if (Math.random() > 0.5) {
+    strOrNum = 5
+} else {
+    strOrNum = "str"
 }
 
-type KeysOfUser = keyof IUser
-
-let key: KeysOfUser = "age"
-
-function getValue<T, K extends keyof T>(obj: T, key: K){
-    return obj[key]
+if (typeof strOrNum === "string"){
+    console.log(strOrNum)
+} else {
+    console.log(strOrNum)
 }
 
-let user: IUser = {
-    name: "saa",
-    age: 34
+let str2OrNumber:  typeof strOrNum
+
+let user = {
+    name: "Alex"
 }
 
-let userName = getValue(user, "name")
+type keyOfUser = keyof typeof user
+
+enum Direction {
+    Up,
+    Down
+}
+
+type d = keyof typeof Direction
