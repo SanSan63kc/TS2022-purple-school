@@ -1,19 +1,18 @@
-type Modifier = "read" | "write" | "update"
+type ReadOrWrite = "read" | "write"
+type Bulk = "bulk" | ""
 
-type UserRoles = {
-    customers?: Modifier,
-    projects?: Modifier,
-    adminPanel?: Modifier
+type Access = `can${Capitalize<ReadOrWrite>}${Capitalize<Bulk>}`
+
+type ReadOrWriteBulk<T> = T extends `can${infer R}` ? R : never
+
+type T = ReadOrWriteBulk<Access>
+
+type ErrorOrSucces = "error" | "success"
+
+interface ResponseT {
+    result: `http${Capitalize<ErrorOrSucces>}`
 }
 
-type ModifierToAccess<Type> = {
-    + readonly [Property in keyof Type as Exclude<`canAccess${string & Property}`, "canAccessAdminPanel">]-?: boolean
-}
-
-type UserToAccess2 = ModifierToAccess<UserRoles>
-
-type UserAccess = {
-    customers?: boolean,
-    projects?: boolean,
-    adminPanel?: boolean
+let a: ResponseT = {
+    result: "httpSuccess"
 }
