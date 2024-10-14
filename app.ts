@@ -1,12 +1,18 @@
-interface PaymentPersistent {
-    id: number
-    sum: number
-    from: string
-    to: string
+class User {
+    constructor(public id: number, public name: string){}
 }
 
-type Payment = Omit<PaymentPersistent, "id">
-type PaymentRequisits = Pick<PaymentPersistent, "from" | "id">
+function getData(id: number): User{
+    return new User (id, "saa")
+}
 
-type ExtractExample = Extract<"from" | "to" | Payment, string>
-type ExcludeExample = Exclude<"from" | "to" | Payment, string>
+type RT = ReturnType<typeof getData>
+type RT2 = ReturnType<()=>void>
+type RT3 = ReturnType<<T>()=>T>
+type RT4 = ReturnType<<T extends string>()=>T>
+
+type PT = Parameters<typeof getData>
+
+type first = PT[0]
+
+type CP = ConstructorParameters<typeof User>
