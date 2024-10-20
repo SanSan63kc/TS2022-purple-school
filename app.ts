@@ -1,47 +1,25 @@
 interface IUserService {
     users: number
-    getUsersInDatabase(): number
+    getUserInDatabase(): number
 }
 
-@nullUser
-@setUsers(2)
-@threeUserAdvanced
-@setUserAdvanced(4)
+@CreatedAt
 class UserService implements IUserService {
-    users: 1000
-    getUsersInDatabase(): number {
+    users: number = 1000
+
+    getUserInDatabase(): number {
         return this.users
     }
 }
 
-function nullUser(target: Function) {
-    target.prototype.users = 0
-}
-
-function setUsers(users: number) {
-    return (target: Function) => {
-        target.prototype.users = users
+function CreatedAt<T extends {new (...args: any[]): {}}>(constructor: T){
+    return class extends constructor{
+        createdAt = new Date()
     }
 }
 
-function log(users: number) {
-    return (target: Function) => {
-        
-    }
+type CreatedAt= {
+    createdAt: Date
 }
 
-function setUserAdvanced(users: number) {
-    return <T extends { new(...args: any[]): {} }>(constructor: T) => {
-        return class extends constructor {
-            users = 3
-        }
-    }
-}
-
-function threeUserAdvanced<T extends { new(...args: any[]): {} }>(constructor: T) {
-    return class extends constructor {
-        users = 3
-    }
-}
-
-console.log(new UserService().getUsersInDatabase())
+console.log((new UserService() as UserService & CreatedAt).createdAt)
