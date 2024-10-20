@@ -1,18 +1,10 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
+var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
+    var useValue = arguments.length > 2;
+    for (var i = 0; i < initializers.length; i++) {
+        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+    }
+    return useValue ? value : void 0;
+};
 var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
     function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
     var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
@@ -40,49 +32,29 @@ var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, 
     if (target) Object.defineProperty(target, contextIn.name, descriptor);
     done = true;
 };
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
-    }
-    return useValue ? value : void 0;
-};
-var __setFunctionName = (this && this.__setFunctionName) || function (f, name, prefix) {
-    if (typeof name === "symbol") name = name.description ? "[".concat(name.description, "]") : "";
-    return Object.defineProperty(f, "name", { configurable: true, value: prefix ? "".concat(prefix, " ", name) : name });
-};
 var _this = this;
 var UserService = function () {
-    var _classDecorators = [CreatedAt];
-    var _classDescriptor;
-    var _classExtraInitializers = [];
-    var _classThis;
-    var UserService = _classThis = /** @class */ (function () {
-        function UserService_1() {
-            this.users = 1000;
-        }
-        UserService_1.prototype.getUserInDatabase = function () {
-            return this.users;
-        };
-        return UserService_1;
-    }());
-    __setFunctionName(_classThis, "UserService");
-    (function () {
-        __esDecorate(null, _classDescriptor = { value: _classThis }, _classDecorators, { kind: "class", name: _classThis.name }, null, _classExtraInitializers);
-        UserService = _classThis = _classDescriptor.value;
-        __runInitializers(_classThis, _classExtraInitializers);
-    })();
-    return UserService = _classThis;
+    var _a;
+    var _instanceExtraInitializers = [];
+    var _getUsersInDatabase_decorators;
+    return _a = /** @class */ (function () {
+            function UserService() {
+                this.users = (__runInitializers(this, _instanceExtraInitializers), 1000);
+            }
+            UserService.prototype.getUsersInDatabase = function () {
+                throw new Error("Ошибка");
+            };
+            return UserService;
+        }()),
+        (function () {
+            _getUsersInDatabase_decorators = [Log];
+            __esDecorate(_a, null, _getUsersInDatabase_decorators, { kind: "method", name: "getUsersInDatabase", static: false, private: false, access: { has: function (obj) { return "getUsersInDatabase" in obj; }, get: function (obj) { return obj.getUsersInDatabase; } } }, null, _instanceExtraInitializers);
+        })(),
+        _a;
 }();
-function CreatedAt(constructor) {
-    return /** @class */ (function (_super) {
-        __extends(class_1, _super);
-        function class_1() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.createdAt = new Date();
-            return _this;
-        }
-        return class_1;
-    }(constructor));
+function Log(target, propertyKey, descriptor) {
+    console.log(target);
+    console.log(propertyKey);
+    console.log(descriptor);
 }
-console.log(new UserService().createdAt);
+console.log(new UserService().getUsersInDatabase());
