@@ -4,33 +4,41 @@ interface IUserService {
 }
 
 class UserService implements IUserService {
+    @Max(100)
     users: number = 1000
 
-    @Catch()
+
     getUsersInDatabase(): number {
         throw new Error("Ошибка")
     }
 }
 
-function Catch(rethrow: boolean = false) {
+function Max(max: number) {
     return (
         target: Object,
-        _: string | symbol,
-        descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
-    ): TypedPropertyDescriptor<(...args: any[]) => any> | void => {
-        let method = descriptor.value
-        descriptor.value = async (...args: any[]) => {
-            try {
-                let res = await method?.apply(target, args)
-                return res
-            } catch(e) {
-                if (e instanceof Error){
-                    console.log(e.message)
-                    if (rethrow){
-                        throw e
-                    }
-                }
+        propertyKey: string | symbol
+    ) => {
+        let value: number
+        let setter = function (newValue: number) {
+            if (newValue > max) {
+                console.log(`Нельзя установить значение больше ${max}`)
+            } else {
+                value = newValue
             }
         }
+
+        let getter = function () {
+            return value
+        }
+
+        Object.defineProperty(target, propertyKey, {
+            set: setter,
+            get: getter
+        })
     }
 }
+
+let userService  = new UserService()
+userService.users = 1
+console.log(userService)
+userService.users = 1000
