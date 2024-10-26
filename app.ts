@@ -27,5 +27,4 @@ function Positive() {
 }
 
 let userService = new UserService()
-userService.users = 1
 console.log(userService)
