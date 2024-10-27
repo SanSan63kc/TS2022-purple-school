@@ -1,2 +1,3 @@
-/// <reference path="./app2.ts"/>
-console.log(A.a)
+import {a} from "./app2"
+
+console.log(a)
