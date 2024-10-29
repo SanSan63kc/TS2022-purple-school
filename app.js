@@ -1,60 +1,26 @@
-var __runInitializers = (this && this.__runInitializers) || function (thisArg, initializers, value) {
-    var useValue = arguments.length > 2;
-    for (var i = 0; i < initializers.length; i++) {
-        value = useValue ? initializers[i].call(thisArg, value) : initializers[i].call(thisArg);
+"use strict";
+exports.__esModule = true;
+exports.abbreviate = void 0;
+function abbreviate(str) {
+    function modifyWord(input) {
+        if (input.length <= 3)
+            return input;
+        else
+            return "".concat(input[0]).concat(input.slice(1, input.length - 1).length).concat(input[input.length - 1]);
     }
-    return useValue ? value : void 0;
-};
-var __esDecorate = (this && this.__esDecorate) || function (ctor, descriptorIn, decorators, contextIn, initializers, extraInitializers) {
-    function accept(f) { if (f !== void 0 && typeof f !== "function") throw new TypeError("Function expected"); return f; }
-    var kind = contextIn.kind, key = kind === "getter" ? "get" : kind === "setter" ? "set" : "value";
-    var target = !descriptorIn && ctor ? contextIn["static"] ? ctor : ctor.prototype : null;
-    var descriptor = descriptorIn || (target ? Object.getOwnPropertyDescriptor(target, contextIn.name) : {});
-    var _, done = false;
-    for (var i = decorators.length - 1; i >= 0; i--) {
-        var context = {};
-        for (var p in contextIn) context[p] = p === "access" ? {} : contextIn[p];
-        for (var p in contextIn.access) context.access[p] = contextIn.access[p];
-        context.addInitializer = function (f) { if (done) throw new TypeError("Cannot add initializers after decoration has completed"); extraInitializers.push(accept(f || null)); };
-        var result = (0, decorators[i])(kind === "accessor" ? { get: descriptor.get, set: descriptor.set } : descriptor[key], context);
-        if (kind === "accessor") {
-            if (result === void 0) continue;
-            if (result === null || typeof result !== "object") throw new TypeError("Object expected");
-            if (_ = accept(result.get)) descriptor.get = _;
-            if (_ = accept(result.set)) descriptor.set = _;
-            if (_ = accept(result.init)) initializers.unshift(_);
+    var arr = str.split(" ").map(function (val) {
+        if (val.indexOf("-") != -1) {
+            var arr_1 = val.split("-");
+            return arr_1.map(function (word) { return modifyWord(word); }).join("-");
         }
-        else if (_ = accept(result)) {
-            if (kind === "field") initializers.unshift(_);
-            else descriptor[key] = _;
-        }
-    }
-    if (target) Object.defineProperty(target, contextIn.name, descriptor);
-    done = true;
-};
-var _this = this;
-var UserService = function () {
-    var _a;
-    var _instanceExtraInitializers = [];
-    var _getUsersInDatabase_decorators;
-    return _a = /** @class */ (function () {
-            function UserService() {
-                this.users = (__runInitializers(this, _instanceExtraInitializers), 1000);
-            }
-            UserService.prototype.getUsersInDatabase = function () {
-                throw new Error("Ошибка");
-            };
-            return UserService;
-        }()),
-        (function () {
-            _getUsersInDatabase_decorators = [Log];
-            __esDecorate(_a, null, _getUsersInDatabase_decorators, { kind: "method", name: "getUsersInDatabase", static: false, private: false, access: { has: function (obj) { return "getUsersInDatabase" in obj; }, get: function (obj) { return obj.getUsersInDatabase; } } }, null, _instanceExtraInitializers);
-        })(),
-        _a;
-}();
-function Log(target, propertyKey, descriptor) {
-    console.log(target);
-    console.log(propertyKey);
-    console.log(descriptor);
+        else
+            return modifyWord(val);
+    });
+    return arr.join(" ");
 }
-console.log(new UserService().getUsersInDatabase());
+exports.abbreviate = abbreviate;
+console.log(abbreviate("internationalization")); //, "i18n");
+console.log(abbreviate("accessibility")); //, "a11y");
+console.log(abbreviate("Accessibility")); //, "A11y");
+console.log(abbreviate("elephant-ride")); //, "e6t-r2e");
+console.log(abbreviate("elephant-rides are really fun!")); //, "e6t-r2e");
