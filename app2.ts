@@ -1,22 +1,59 @@
-interface Prototype<T>{
-    clone(): T
+enum ImageFormat {
+    Png = "png",
+    Jpeg = "jpeg"
 }
 
-class UserHistory implements Prototype<UserHistory>{
-    createdAt: Date
-    constructor(public email: string, public name: string){
-        this.createdAt = new Date()
+interface IResolution {
+    width: number
+    height: number
+}
+
+interface IIMageConversion extends IResolution {
+    format: ImageFormat
+}
+
+class ImageBuilder {
+    private formats: ImageFormat[] = []
+    private resolutions: IResolution[] = []
+    addPng() {
+        if (this.formats.includes(ImageFormat.Png)) {
+            return this
+        }
+        this.formats.push(ImageFormat.Png)
+        return this
     }
 
-    clone(): UserHistory{
-        let target = new UserHistory(this.email, this.name)
-        target.createdAt = this.createdAt
-        return target
+    addJpeg() {
+        if (this.formats.includes(ImageFormat.Jpeg)) {
+            return this
+        }
+        this.formats.push(ImageFormat.Jpeg)
+        return this
+    }
+
+    addResolution(width: number, height: number) {
+        this.resolutions.push({ width, height })
+        return this
+    }
+
+    build(): IIMageConversion[] {
+        let res: IIMageConversion[] = []
+        for (let r of this.resolutions) {
+            for (let f of this.formats) {
+                res.push({
+                    format: f,
+                    width: r.width,
+                    height: r.height
+                })
+            }
+        }
+        return res
     }
 }
 
-let user = new UserHistory("a@a.ru", "Alex")
-console.log(user)
-
-let user2 = user.clone()
-console.log(user2)
+console.log(new ImageBuilder()
+    .addJpeg()
+    .addPng()
+    .addResolution(100, 50)
+    .addResolution(200, 100)
+    .build())
