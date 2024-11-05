@@ -1,59 +1,57 @@
-enum ImageFormat {
-    Png = "png",
-    Jpeg = "jpeg"
+interface IProvider {
+    sendMessage(message: string): void
+    connect(config: string): void
+    disconnect(): void
 }
 
-interface IResolution {
-    width: number
-    height: number
-}
-
-interface IIMageConversion extends IResolution {
-    format: ImageFormat
-}
-
-class ImageBuilder {
-    private formats: ImageFormat[] = []
-    private resolutions: IResolution[] = []
-    addPng() {
-        if (this.formats.includes(ImageFormat.Png)) {
-            return this
-        }
-        this.formats.push(ImageFormat.Png)
-        return this
+class TelegramProvider implements IProvider{
+    sendMessage(message: string): void {
+        console.log(message)
     }
 
-    addJpeg() {
-        if (this.formats.includes(ImageFormat.Jpeg)) {
-            return this
-        }
-        this.formats.push(ImageFormat.Jpeg)
-        return this
+    connect(config: string): void{
+        console.log(config)
     }
 
-    addResolution(width: number, height: number) {
-        this.resolutions.push({ width, height })
-        return this
-    }
-
-    build(): IIMageConversion[] {
-        let res: IIMageConversion[] = []
-        for (let r of this.resolutions) {
-            for (let f of this.formats) {
-                res.push({
-                    format: f,
-                    width: r.width,
-                    height: r.height
-                })
-            }
-        }
-        return res
+    disconnect(): void{
+        console.log("disconnect TG")
     }
 }
 
-console.log(new ImageBuilder()
-    .addJpeg()
-    .addPng()
-    .addResolution(100, 50)
-    .addResolution(200, 100)
-    .build())
+class WhatsUpProvider implements IProvider{
+    sendMessage(message: string): void {
+        console.log(message)
+    }
+
+    connect<T>(config: string): void{
+        console.log(config)
+    }
+
+    disconnect(): void{
+        console.log("disconnect WhatsUp")
+    }
+}
+
+class NotoficationsSender{
+    constructor(private provider: IProvider){}
+
+    send(){
+        this.provider.connect("connect")
+        this.provider.sendMessage("message")
+        this.provider.disconnect()
+    }
+}
+
+class DelayNotificationSender extends NotoficationsSender{
+    constructor(provider: IProvider){
+        super(provider)
+    }
+    sendDelayed(){
+    }
+}
+
+let sender = new  NotoficationsSender(new TelegramProvider)
+sender.send()
+
+let sender2 = new  NotoficationsSender(new WhatsUpProvider)
+sender2.send()
