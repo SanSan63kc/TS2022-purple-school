@@ -1,55 +1,54 @@
-abstract class DeliveryItem {
-    items: DeliveryItem[] = []
-
-    addItem(item: DeliveryItem) {
-        this.items.push(item)
-    }
-
-    getItemPrices(): number {
-        return this.items.reduce((acc: number, i: DeliveryItem) => acc += i.getPrice(), 0)
-    }
-
-    abstract getPrice(): number
+interface IMiddleware {
+    next(mid: IMiddleware): IMiddleware
+    handle(request: any): any
 }
 
-export class DeliveryShop extends DeliveryItem {
-
-    constructor(private deliveryFee: number) {
-        super()
+abstract class AbstractMiddleware implements IMiddleware {
+    private nextMiddleware: IMiddleware
+    next(mid: IMiddleware): IMiddleware {
+        this.nextMiddleware = mid
+        return mid
     }
-
-    getPrice(): number {
-        return this.getItemPrices() + this.deliveryFee
+    handle(request: any) {
+        if (this.nextMiddleware) {
+            return this.nextMiddleware.handle(request)
+        }
+        return
     }
 }
 
-export class Package extends DeliveryItem {
-    getPrice(): number {
-        return this.getItemPrices()
+class AuthMiddleware extends AbstractMiddleware {
+    override handle(request: any){
+        console.log("AuthMiddleware")
+        if (request.userId === 1){
+            return super.handle(request)
+        }
+        return {error: "вы не авторизованы"}
     }
 }
 
-export class Product extends DeliveryItem {
-
-    constructor(private price: number) {
-        super()
-    }
-
-    getPrice(): number {
-        return this.price
+class ValidateMiddleware extends AbstractMiddleware{
+    override handle(request: any){
+        if (request.body){
+            return super.handle(request)
+        }
+        return {error: "нет body"}
     }
 }
 
-let shop = new DeliveryShop(100)
-shop.addItem(new Product(1000))
+class Controller extends AbstractMiddleware{
+    override handle(request: any){
+        console.log("Контроллер")
+        return {success: request}
+    }
+}
 
-let pack1 = new Package()
-pack1.addItem(new Product(200))
-pack1.addItem(new Product(300))
-shop.addItem(pack1)
+let controller = new Controller()
+let validate = new ValidateMiddleware()
+let auth = new AuthMiddleware()
 
-let pack2 = new Package()
-pack2.addItem(new Product(30))
-shop.addItem(pack2)
+auth.next(validate).next(controller)
 
-console.log(shop.getPrice())
+console.log(auth.handle({
+    userId: 3
+}))
