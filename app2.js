@@ -13,63 +13,59 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var AbstractMiddleware = /** @class */ (function () {
-    function AbstractMiddleware() {
+var Mediated = /** @class */ (function () {
+    function Mediated() {
     }
-    AbstractMiddleware.prototype.next = function (mid) {
-        this.nextMiddleware = mid;
-        return mid;
+    Mediated.prototype.setMediator = function (mediator) {
+        this.mediator = mediator;
     };
-    AbstractMiddleware.prototype.handle = function (request) {
-        if (this.nextMiddleware) {
-            return this.nextMiddleware.handle(request);
-        }
-        return;
-    };
-    return AbstractMiddleware;
+    return Mediated;
 }());
-var AuthMiddleware = /** @class */ (function (_super) {
-    __extends(AuthMiddleware, _super);
-    function AuthMiddleware() {
+var Notifications = /** @class */ (function () {
+    function Notifications() {
+    }
+    Notifications.prototype.send = function () {
+        console.log("Отправляю уведомление");
+    };
+    return Notifications;
+}());
+var Log = /** @class */ (function () {
+    function Log() {
+    }
+    Log.prototype.log = function (message) {
+        console.log(message);
+    };
+    return Log;
+}());
+var EventHandler = /** @class */ (function (_super) {
+    __extends(EventHandler, _super);
+    function EventHandler() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    AuthMiddleware.prototype.handle = function (request) {
-        console.log("AuthMiddleware");
-        if (request.userId === 1) {
-            return _super.prototype.handle.call(this, request);
+    EventHandler.prototype.myEvent = function () {
+        this.mediator.notify("EventHandler", "myEvent");
+    };
+    return EventHandler;
+}(Mediated));
+var NotificationMediator = /** @class */ (function () {
+    function NotificationMediator(notifications, logger, handler) {
+        this.notifications = notifications;
+        this.logger = logger;
+        this.handler = handler;
+    }
+    NotificationMediator.prototype.notify = function (sender, event) {
+        switch (event) {
+            case "myEvent":
+                this.notifications.send();
+                this.logger.log("отправлено");
+                break;
         }
-        return { error: "вы не авторизованы" };
     };
-    return AuthMiddleware;
-}(AbstractMiddleware));
-var ValidateMiddleware = /** @class */ (function (_super) {
-    __extends(ValidateMiddleware, _super);
-    function ValidateMiddleware() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    ValidateMiddleware.prototype.handle = function (request) {
-        if (request.body) {
-            return _super.prototype.handle.call(this, request);
-        }
-        return { error: "нет body" };
-    };
-    return ValidateMiddleware;
-}(AbstractMiddleware));
-var Controller = /** @class */ (function (_super) {
-    __extends(Controller, _super);
-    function Controller() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    Controller.prototype.handle = function (request) {
-        console.log("Контроллер");
-        return { success: request };
-    };
-    return Controller;
-}(AbstractMiddleware));
-var controller = new Controller();
-var validate = new ValidateMiddleware();
-var auth = new AuthMiddleware();
-auth.next(validate).next(controller);
-console.log(auth.handle({
-    userId: 3
-}));
+    return NotificationMediator;
+}());
+var handler = new EventHandler();
+var logger = new Log();
+var notifications = new Notifications();
+var m = new NotificationMediator(notifications, logger, handler);
+handler.setMediator(m);
+handler.myEvent();
