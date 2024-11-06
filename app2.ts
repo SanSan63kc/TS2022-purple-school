@@ -1,57 +1,46 @@
-interface IProvider {
-    sendMessage(message: string): void
-    connect(config: string): void
-    disconnect(): void
+class Notify{
+    send(template: string, to: string){
+        console.log(`Отправляю ${template}: ${to}`)
+    }
 }
 
-class TelegramProvider implements IProvider{
-    sendMessage(message: string): void {
+class Log{
+    log(message: string){
         console.log(message)
     }
+}
 
-    connect(config: string): void{
-        console.log(config)
-    }
+class Template{
+    private templates = [
+        {name: "other", template: "<h1>Шаблон</h1>"}
+    ]
 
-    disconnect(): void{
-        console.log("disconnect TG")
+    getByName(name: string){
+        return this.templates.find(t=>t.name === name)
     }
 }
 
-class WhatsUpProvider implements IProvider{
-    sendMessage(message: string): void {
-        console.log(message)
+class NotificationFacade{
+    private notify: Notify
+    private logger: Log
+    private template: Template
+
+    constructor(){
+        this.notify = new Notify()
+        this.template = new Template()
+        this.logger = new Log()
     }
 
-    connect<T>(config: string): void{
-        console.log(config)
-    }
-
-    disconnect(): void{
-        console.log("disconnect WhatsUp")
-    }
-}
-
-class NotoficationsSender{
-    constructor(private provider: IProvider){}
-
-    send(){
-        this.provider.connect("connect")
-        this.provider.sendMessage("message")
-        this.provider.disconnect()
+    send(to: string, templateName: string){
+        let data = this.template.getByName(templateName)
+        if (!data){
+            this.logger.log(" Не найден шаблон")
+            return
+        }
+        this.notify.send(data.template, to)
+        this.logger.log("шаблон отправлен")
     }
 }
 
-class DelayNotificationSender extends NotoficationsSender{
-    constructor(provider: IProvider){
-        super(provider)
-    }
-    sendDelayed(){
-    }
-}
-
-let sender = new  NotoficationsSender(new TelegramProvider)
-sender.send()
-
-let sender2 = new  NotoficationsSender(new WhatsUpProvider)
-sender2.send()
+let s = new NotificationFacade()
+s.send("a@a.ru", "other")

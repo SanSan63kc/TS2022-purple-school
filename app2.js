@@ -1,37 +1,46 @@
-var MyMap = /** @class */ (function () {
-    function MyMap() {
-        this.map = new Map();
+var Notify = /** @class */ (function () {
+    function Notify() {
     }
-    MyMap.prototype.clean = function () {
-        this.map = new Map();
+    Notify.prototype.send = function (template, to) {
+        console.log("\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u044E ".concat(template, ": ").concat(to));
     };
-    MyMap.get = function () {
-        if (!MyMap.instance) {
-            MyMap.instance = new MyMap();
+    return Notify;
+}());
+var Log = /** @class */ (function () {
+    function Log() {
+    }
+    Log.prototype.log = function (message) {
+        console.log(message);
+    };
+    return Log;
+}());
+var Template = /** @class */ (function () {
+    function Template() {
+        this.templates = [
+            { name: "other", template: "<h1>Шаблон</h1>" }
+        ];
+    }
+    Template.prototype.getByName = function (name) {
+        return this.templates.find(function (t) { return t.name === name; });
+    };
+    return Template;
+}());
+var NotificationFacade = /** @class */ (function () {
+    function NotificationFacade() {
+        this.notify = new Notify();
+        this.template = new Template();
+        this.logger = new Log();
+    }
+    NotificationFacade.prototype.send = function (to, templateName) {
+        var data = this.template.getByName(templateName);
+        if (!data) {
+            this.logger.log(" Не найден шаблон");
+            return;
         }
-        return MyMap.instance;
+        this.notify.send(data.template, to);
+        this.logger.log("шаблон отправлен");
     };
-    return MyMap;
+    return NotificationFacade;
 }());
-var Service1 = /** @class */ (function () {
-    function Service1() {
-    }
-    Service1.prototype.addMap = function (key, value) {
-        var myMap = MyMap.get();
-        myMap.map.set(key, value);
-    };
-    return Service1;
-}());
-var Service2 = /** @class */ (function () {
-    function Service2() {
-    }
-    Service2.prototype.getKeys = function (key) {
-        var myMap = MyMap.get();
-        console.log(myMap.map.get(key));
-        myMap.clean();
-        console.log(myMap.map.get(key));
-    };
-    return Service2;
-}());
-new Service1().addMap(1, "Работает");
-new Service2().getKeys(1);
+var s = new NotificationFacade();
+s.send("a@a.ru", "other");
