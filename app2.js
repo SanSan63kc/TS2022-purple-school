@@ -1,46 +1,48 @@
-var Notify = /** @class */ (function () {
-    function Notify() {
-    }
-    Notify.prototype.send = function (template, to) {
-        console.log("\u041E\u0442\u043F\u0440\u0430\u0432\u043B\u044F\u044E ".concat(template, ": ").concat(to));
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
     };
-    return Notify;
-}());
-var Log = /** @class */ (function () {
-    function Log() {
-    }
-    Log.prototype.log = function (message) {
-        console.log(message);
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
-    return Log;
-}());
-var Template = /** @class */ (function () {
-    function Template() {
-        this.templates = [
-            { name: "other", template: "<h1>Шаблон</h1>" }
-        ];
+})();
+var KVDatabase = /** @class */ (function () {
+    function KVDatabase() {
+        this.db = new Map();
     }
-    Template.prototype.getByName = function (name) {
-        return this.templates.find(function (t) { return t.name === name; });
+    KVDatabase.prototype.save = function (key, value) {
+        this.db.set(key, value);
     };
-    return Template;
+    return KVDatabase;
 }());
-var NotificationFacade = /** @class */ (function () {
-    function NotificationFacade() {
-        this.notify = new Notify();
-        this.template = new Template();
-        this.logger = new Log();
+var PersistentDB = /** @class */ (function () {
+    function PersistentDB() {
     }
-    NotificationFacade.prototype.send = function (to, templateName) {
-        var data = this.template.getByName(templateName);
-        if (!data) {
-            this.logger.log(" Не найден шаблон");
-            return;
-        }
-        this.notify.send(data.template, to);
-        this.logger.log("шаблон отправлен");
+    PersistentDB.prototype.savePersistent = function (data) {
+        console.log(data);
     };
-    return NotificationFacade;
+    return PersistentDB;
 }());
-var s = new NotificationFacade();
-s.send("a@a.ru", "other");
+var PersistentDBAdapter = /** @class */ (function (_super) {
+    __extends(PersistentDBAdapter, _super);
+    function PersistentDBAdapter(database) {
+        var _this = _super.call(this) || this;
+        _this.database = database;
+        return _this;
+    }
+    PersistentDBAdapter.prototype.save = function (key, value) {
+        this.database.savePersistent({ key: key, value: value });
+    };
+    return PersistentDBAdapter;
+}(KVDatabase));
+function run(base) {
+    base.save("key", "myValue");
+}
+run(new PersistentDBAdapter(new PersistentDB));
