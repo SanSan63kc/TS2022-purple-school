@@ -1,48 +1,27 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        if (typeof b !== "function" && b !== null)
-            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var KVDatabase = /** @class */ (function () {
-    function KVDatabase() {
-        this.db = new Map();
+var PaymentAPI = /** @class */ (function () {
+    function PaymentAPI() {
+        this.data = [{ id: 1, sum: 10000 }];
     }
-    KVDatabase.prototype.save = function (key, value) {
-        this.db.set(key, value);
+    PaymentAPI.prototype.getPaymentDetails = function (id) {
+        return this.data.find(function (d) { return d.id === id; });
     };
-    return KVDatabase;
+    return PaymentAPI;
 }());
-var PersistentDB = /** @class */ (function () {
-    function PersistentDB() {
+var PaymentAccessProxy = /** @class */ (function () {
+    function PaymentAccessProxy(api, userId) {
+        this.api = api;
+        this.userId = userId;
     }
-    PersistentDB.prototype.savePersistent = function (data) {
-        console.log(data);
+    PaymentAccessProxy.prototype.getPaymentDetails = function (id) {
+        if (this.userId === 1) {
+            return this.api.getPaymentDetails(id);
+        }
+        console.log("Попытка получить данные платежа");
+        return undefined;
     };
-    return PersistentDB;
+    return PaymentAccessProxy;
 }());
-var PersistentDBAdapter = /** @class */ (function (_super) {
-    __extends(PersistentDBAdapter, _super);
-    function PersistentDBAdapter(database) {
-        var _this = _super.call(this) || this;
-        _this.database = database;
-        return _this;
-    }
-    PersistentDBAdapter.prototype.save = function (key, value) {
-        this.database.savePersistent({ key: key, value: value });
-    };
-    return PersistentDBAdapter;
-}(KVDatabase));
-function run(base) {
-    base.save("key", "myValue");
-}
-run(new PersistentDBAdapter(new PersistentDB));
+var proxy = new PaymentAccessProxy(new PaymentAPI(), 1);
+console.log(proxy.getPaymentDetails(1));
+var proxy2 = new PaymentAccessProxy(new PaymentAPI(), 2);
+console.log(proxy2.getPaymentDetails(1));
