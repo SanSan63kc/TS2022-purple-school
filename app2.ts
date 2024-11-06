@@ -1,34 +1,55 @@
-interface IPaymentAPI {
-    getPaymentDetails(id: number): IPaymentDetail | undefined
+abstract class DeliveryItem {
+    items: DeliveryItem[] = []
+
+    addItem(item: DeliveryItem) {
+        this.items.push(item)
+    }
+
+    getItemPrices(): number {
+        return this.items.reduce((acc: number, i: DeliveryItem) => acc += i.getPrice(), 0)
+    }
+
+    abstract getPrice(): number
 }
 
-interface IPaymentDetail {
-    id: number
-    sum: number
-}
+export class DeliveryShop extends DeliveryItem {
 
-class PaymentAPI implements IPaymentAPI {
-    private data = [{ id: 1, sum: 10000 }]
+    constructor(private deliveryFee: number) {
+        super()
+    }
 
-    getPaymentDetails(id: number): IPaymentDetail | undefined {
-        return this.data.find(d => d.id === id)
+    getPrice(): number {
+        return this.getItemPrices() + this.deliveryFee
     }
 }
 
-class PaymentAccessProxy implements IPaymentAPI {
-    constructor(private api: PaymentAPI, private userId: number){}
-
-    getPaymentDetails(id: number): IPaymentDetail | undefined {
-        if (this.userId === 1){
-            return this.api.getPaymentDetails(id)
-        }
-        console.log("Попытка получить данные платежа")
-        return undefined
+export class Package extends DeliveryItem {
+    getPrice(): number {
+        return this.getItemPrices()
     }
 }
 
-let proxy = new PaymentAccessProxy(new PaymentAPI(), 1)
-console.log(proxy.getPaymentDetails(1))
+export class Product extends DeliveryItem {
 
-let proxy2 = new PaymentAccessProxy(new PaymentAPI(), 2)
-console.log(proxy2.getPaymentDetails(1))
+    constructor(private price: number) {
+        super()
+    }
+
+    getPrice(): number {
+        return this.price
+    }
+}
+
+let shop = new DeliveryShop(100)
+shop.addItem(new Product(1000))
+
+let pack1 = new Package()
+pack1.addItem(new Product(200))
+pack1.addItem(new Product(300))
+shop.addItem(pack1)
+
+let pack2 = new Package()
+pack2.addItem(new Product(30))
+shop.addItem(pack2)
+
+console.log(shop.getPrice())
