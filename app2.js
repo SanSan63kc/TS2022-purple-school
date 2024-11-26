@@ -13,59 +13,76 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Mediated = /** @class */ (function () {
-    function Mediated() {
+var User = /** @class */ (function () {
+    function User(userId) {
+        this.userId = userId;
     }
-    Mediated.prototype.setMediator = function (mediator) {
-        this.mediator = mediator;
-    };
-    return Mediated;
+    return User;
 }());
-var Notifications = /** @class */ (function () {
-    function Notifications() {
+var CommandHistory = /** @class */ (function () {
+    function CommandHistory() {
+        this.commands = [];
     }
-    Notifications.prototype.send = function () {
-        console.log("Отправляю уведомление");
+    CommandHistory.prototype.push = function (command) {
+        this.commands.push(command);
     };
-    return Notifications;
+    CommandHistory.prototype.remove = function (command) {
+        this.commands = this.commands.filter(function (c) { return c.commandId != command.commandId; });
+    };
+    return CommandHistory;
 }());
-var Log = /** @class */ (function () {
-    function Log() {
+var Command = /** @class */ (function () {
+    function Command(history) {
+        this.history = history;
+        this.commandId = Math.random();
     }
-    Log.prototype.log = function (message) {
-        console.log(message);
-    };
-    return Log;
+    return Command;
 }());
-var EventHandler = /** @class */ (function (_super) {
-    __extends(EventHandler, _super);
-    function EventHandler() {
-        return _super !== null && _super.apply(this, arguments) || this;
+var AddUserCommand = /** @class */ (function (_super) {
+    __extends(AddUserCommand, _super);
+    function AddUserCommand(user, receiver, history) {
+        var _this = _super.call(this, history) || this;
+        _this.user = user;
+        _this.receiver = receiver;
+        return _this;
     }
-    EventHandler.prototype.myEvent = function () {
-        this.mediator.notify("EventHandler", "myEvent");
+    AddUserCommand.prototype.execute = function () {
+        this.receiver.saveUser(this.user);
+        this.history.push(this);
     };
-    return EventHandler;
-}(Mediated));
-var NotificationMediator = /** @class */ (function () {
-    function NotificationMediator(notifications, logger, handler) {
-        this.notifications = notifications;
-        this.logger = logger;
-        this.handler = handler;
+    AddUserCommand.prototype.undo = function () {
+        this.receiver.deleteUser(this.user.userId);
+        this.history.remove(this);
+    };
+    return AddUserCommand;
+}(Command));
+var UserService = /** @class */ (function () {
+    function UserService() {
     }
-    NotificationMediator.prototype.notify = function (sender, event) {
-        switch (event) {
-            case "myEvent":
-                this.notifications.send();
-                this.logger.log("отправлено");
-                break;
-        }
+    UserService.prototype.saveUser = function (user) {
+        console.log("\u0421\u043E\u0445\u0440\u0430\u043D\u044F\u044E \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u0441 id ".concat(user.userId));
     };
-    return NotificationMediator;
+    UserService.prototype.deleteUser = function (userId) {
+        console.log("\u0423\u0434\u0430\u043B\u044F\u0435\u043C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F \u0441 id ".concat(userId));
+    };
+    return UserService;
 }());
-var handler = new EventHandler();
-var logger = new Log();
-var notifications = new Notifications();
-var m = new NotificationMediator(notifications, logger, handler);
-handler.setMediator(m);
-handler.myEvent();
+var Controller = /** @class */ (function () {
+    function Controller() {
+        this.history = new CommandHistory();
+    }
+    Controller.prototype.addreceiver = function (receiver) {
+        this.receiver = receiver;
+    };
+    Controller.prototype.run = function () {
+        var addUserCommand = new AddUserCommand(new User(1), this.receiver, this.history);
+        addUserCommand.execute();
+        console.log(addUserCommand.history);
+        addUserCommand.undo();
+        console.log(addUserCommand.history);
+    };
+    return Controller;
+}());
+var controller = new Controller();
+controller.addreceiver(new UserService());
+controller.run();
